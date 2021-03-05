@@ -1,20 +1,36 @@
-html,
-  body {
-    background: white;
-    font-family: Verdana, Geneva, sans-serif;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-  }
+html{
+  /*
+  The default html interpertation adds margin and padding to the basic elements
+  So it can be logically helpful to remove them from the beginning!
+  */
+  font-family:-apple-system, 'Helvetica Neue';
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
-  .Adelie {
-      fill: '#ccccff';
-  } 
-  
-  .Chinstrap{
-    fill:'red';}
-  
-  .Gentoo{
-    fill:'lightblue';
-  }
+body{
+  font-size: 20px;
+  color: black;
+  height: 100vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  background-color: #e4e6eb;
+}
+
+.flex-header{
+  background-image: url('background_img.png');
+  background-attachment: fixed;
+  background-size: contain;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  font-size: 110%;
+  font-weight: 700;
+}
+
+.description-text{
+  font-weight: 400;
+  font-size: 75%;
+  text-align: end;
+}

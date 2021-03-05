@@ -1,7 +1,7 @@
 /* 
 Data Vis Project
 */
-
+import '../main.css';
 import { select } from 'd3-selection';
 import { json } from 'd3-fetch';
 import { extent } from 'd3-array';
@@ -36,8 +36,12 @@ function unique(data, key) {
 };
 
 function lineplot(data) {
-
-    console.log(data)
+    const svg = select('#app')
+        .append('svg')
+        .attr('height', `${height}px`)
+        .attr('width', `${width}px`)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
 }
 
