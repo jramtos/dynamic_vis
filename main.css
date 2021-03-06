@@ -32,5 +32,49 @@ body{
 .description-text{
   font-weight: 400;
   font-size: 75%;
-  text-align: end;
+  margin: 100px;
+  padding-right: 100px;
 }
+
+.main-flex{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-around;
+}
+
+.right-flex{
+  display: flex;
+  flex-direction: column;
+
+}
+
+#input-gender{
+  margin: 0;
+  font-size: 16px;
+  position: relative;
+  margin-left: 400px;
+  top:30px;
+  color:grey;
+
+}
+
+input[type='radio'] {
+  -webkit-appearance:none;
+  width:20px;
+  height:20px;
+  border:1px solid darkgray;
+  border-radius:50%;
+  outline:none;
+  box-shadow:0 0 5px 0px gray inset;
+}
+input[type='radio']:before {
+  content:'';
+  display:block;
+  width:100%;
+  height:100%;
+  border-radius:50%;    
+}
+input[type='radio']:checked:before {
+  background:#001f3d;
+}
+
