@@ -16,7 +16,7 @@ body{
   text-align: center;
   display: flex;
   flex-direction: column;
-  background-color: #e4e6eb;
+  background-color: white;
 }
 
 .flex-header{
