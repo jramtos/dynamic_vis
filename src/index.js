@@ -28,9 +28,9 @@ const age_dic = {
 };
 
 //Define fixed variables
-const height = 450;
-const width = 600;
-const margin = { top: 70, bottom: 70, right: 70, left: 70 };
+const height = 400;
+const width = 400;
+const margin = { left: 50, top: 50, bottom: 50, right: 50 };
 const plotWidth = width - margin.left - margin.right;
 const plotHeight = height - margin.top - margin.bottom;
 
@@ -59,7 +59,7 @@ function lineplot(data) {
     //Scales
     const yScale = scaleLinear()
         .domain([0, 2])
-        .range([plotHeight, 0]);
+        .range([plotWidth, 0]);
 
     const xScale = scaleLinear()
         .domain(age_range)
@@ -70,14 +70,16 @@ function lineplot(data) {
         .domain(mental_ill);
 
     const lineScale = line()
-        .x(d => xScale(d.demo))
+        .x(d => {
+            return xScale(d.demo)
+        })
         .y(d => yScale(d.times_arrested));
 
     //Parent svg
     const svg = select('#app')
         .append('svg')
-        .attr('height', `${height}px`)
-        .attr('width', `${width}px`)
+        .attr('height', `${height}`)
+        .attr('width', `${width}`)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
     //Add axis
