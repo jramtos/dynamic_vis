@@ -5,11 +5,12 @@ import '../main.css';
 import { csv } from 'd3-fetch';
 import { select, selectAll } from 'd3-selection';
 import { nest } from 'd3-collection';
-import { line, curveBasis } from 'd3-shape';
+import { line } from 'd3-shape';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
-import { easeLinear, extent, schemePaired } from 'd3';
-import { transition } from 'd3-transition';
+import { extent, schemeSet2 } from 'd3';
+import "intersection-observer";
+import scrollama from "scrollama";
 
 // Read Data and call Scatter plot function
 
@@ -28,10 +29,16 @@ const age_dic = {
     4: '45-54', 5: '55-64', 6: '65 or Older'
 };
 
+const mental_illness_dic = {
+    0: 'No Mental Ilness',
+    1: 'Non-Serious Mental Illness',
+    2: 'Serious Mental Illness'
+}
+
 //Define fixed variables
-const height = 400;
-const width = 600;
-const margin = { left: 50, top: 50, bottom: 50, right: 50 };
+const height = 450;
+const width = 650;
+const margin = { left: 80, top: 90, bottom: 90, right: 120 };
 const plotWidth = width - margin.left - margin.right;
 const plotHeight = height - margin.top - margin.bottom;
 
@@ -74,7 +81,6 @@ function lineplot(data) {
     const mental_ill = unique(data, 'mental_illness')
     const numeric_var = 'times_arrested';
 
-
     //Scale Variables
     var yScale = scaleLinear()
         .range([plotHeight, 0]);
@@ -83,7 +89,7 @@ function lineplot(data) {
         .domain(extent(data.filter(d => d.var == dem_group),
             d => d.demo));
     var mental_ill_colors = scaleOrdinal()
-        .range(schemePaired)
+        .range(schemeSet2.slice(0, 3))
         .domain(mental_ill);
 
 
@@ -117,12 +123,78 @@ function lineplot(data) {
         .attr('transform', `translate(0, ${plotHeight})`);
 
 
+
+    //Aesthetics for the graph
+    svg.append("text")
+        .attr("x", plotWidth - 220)
+        .attr("y", 20 - (margin.top / 2))
+        .attr('id', 'title-first-graph')
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .style('font-weight', 'bold')
+        .style('fill', 'black')
+        .text(`Average Number of Arrests by Prevalence of Mental Illness Across Age Groups`)
+
+    const size = 12;
+
+    svg.selectAll("squares")
+        .data(mental_ill.sort((a, b) => Number(b) - Number(a)))
+        .enter()
+        .append("rect")
+        .attr("x", plotWidth - 60)
+        .attr("y", (d, i) => -5 + i * 25)
+        .attr("width", size)
+        .attr("height", size)
+        .style("fill", d => mental_ill_colors(d))
+        .attr('class', d => d)
+
+    svg.selectAll("names")
+        .data(mental_ill.sort((a, b) => Number(b) - Number(a)))
+        .enter()
+        .append("text")
+        .attr("x", plotWidth - 45)
+        .attr("y", (d, i) => 3 + i * 25)
+        .text(d => mental_illness_dic[d])
+        .attr('class', d => d)
+        .attr("text-anchor", "right")
+        .attr('font-size', "12px")
+        .style("alignment-baseline", "middle")
+
+    svg.append("text")
+        .attr("x", 50)
+        .attr("y", plotHeight + 60)
+        .attr("text-anchor", "middle")
+        .style("font-size", "10px")
+        .text("Source: BJS 2016 Inmates Survey");
+
+    // text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", margin.top - 130)
+        .attr("x", margin.left - 200)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .style("font-size", "12px")
+        .style('font-weight', 'bold')
+        .style('fill', 'grey')
+        .text('Number of Times Arrested');
+
+    // text label for the x axis
+    svg.append("text")
+        .attr("x", margin.left + 120)
+        .attr("y", plotHeight + 40)
+        .attr("dx", "1em")
+        .style("text-anchor", "middle")
+        .style("font-size", "12px")
+        .style('font-weight', 'bold')
+        .style('fill', 'grey')
+        .text('Group Age');
+
+    //Draw first one
     let lines = null;
-    update('Male', 0, true);
-
-
+    update('Male', true);
     //Update
-    function update(gender, speed, first_time) {
+    function update(gender, first_time) {
 
         let groupData = nest_data_fil(data, 'age', gender)
 
@@ -196,13 +268,11 @@ function lineplot(data) {
                 .attr('stroke', 'grey')
                 .attr('fill', d => mental_ill_colors(d.mental_illness))
         }
-
-
     }
 
     selectAll("input")
         .on("change", function change() {
-            update(this.value, 1200, false);
+            update(this.value, false);
         });
 
 }
