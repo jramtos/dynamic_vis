@@ -13,38 +13,45 @@
     <small> An examination of the 2016 Inmates Survey from the Bureau of Justice Statistics
     </small>
     <br>
-    <br>
-    <small class='description-text'>
-      Mass incarceration represents a public health and social issue
-      in the U.S. In an effort to understand this problem, we examine the rates of recidivism of inmates
-      across several social dimensions such as mental illness prevalence,
-      family conditions, emotional difficulties and education, using the data from the BJS 2016 Inmates Survey.
-    </small>
   </header>
-  <main class='main-flex'>
-    <left class='left-flex'>
-      <br>
-      SOME TEXT HERE
-    </left>
+  <main id="intro" class="main-flex">
+    Mass incarceration /represents a public health and social issue in the U.S, particularly, the high levels of
+    recidivism are concerning.
+    According to the <a href="https://nij.ojp.gov/topics/articles/recidivism-core-criminal-justice-concern"> National
+      Institute of Justice</a>, more than 60% of the prisoners released in 2005 were arrested
+    within 3 years and 83% within 9 years.
+    <br>
+    <br>
+    In an effort to further study and address this problem, we examine the rates of recidivism
+    across several social dimensions such as mental illness prevalence,
+    family conditions, emotional difficulties and education, using the data from the BJS 2016 Inmates Survey.
+    <br>
+    <br>
+    <form id='input-gender'>
+      <b>Select gender population and start scrolling<br>
+      </b>
+      <label><input type="radio" name='gender' value="Male" checked> Male</label>
+      <label><input type="radio" name='gender' value="Female"> Female</label>
+    </form>
+    <br>
+  </main>
+  <section id="scrolly">
+    <article>
+      <div class="step" data-step="1">
+        <p>STEP 1</p>
+      </div>
+      <div class="step" data-step="2">
+        <p>STEP 2</p>
+      </div>
+    </article>
+    <figure id="app">
+    </figure>
 
     <right class='right-flex'>
-      <div>
-        <form id='input-gender'>
-          <b>Select Gender Population<br>
-          </b>
-          <label><input type="radio" name='gender' value="Male" checked> Male</label>
-          <label><input type="radio" name='gender' value="Female"> Female</label>
-        </form>
 
-      </div>
-      <div id="app"></div>
     </right>
 
-  </main>
-
-
-
-  <script src="bundle.js"></script>
+    <script src="bundle.js"></script>
 </body>
 
 </html>

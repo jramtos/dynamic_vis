@@ -10,7 +10,7 @@ html{
 }
 
 body{
-  font-size: 20px;
+  font-size: 15px;
   color: black;
   height: 100vh;
   text-align: center;
@@ -23,36 +23,31 @@ body{
   background-image: url('background_img.png');
   background-attachment: fixed;
   background-size: contain;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-  font-size: 110%;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  font-size: 140%;
   font-weight: 700;
 }
 
 .description-text{
   font-weight: 400;
-  font-size: 75%;
-  margin: 100px;
-  padding-right: 100px;
+  font-size: 100%;
+  font-family: Lucida Sans;
+  color: #8a8a8a;
 }
 
-.main-flex{
-  display: flex;
-  flex-direction: row;
-  justify-content:space-around;
-}
-
-.right-flex{
-  display: flex;
-  flex-direction: column;
-
+.main-flex{ 
+  font-family: Lucida Sans;
+  font-size: 18px;
+  font-weight: 400;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 20px;
 }
 
 #input-gender{
-  margin: 0;
-  font-size: 16px;
-  position: relative;
-  margin-left: 400px;
+  padding-block: 10px;
+  font-size: 15px;
   top:30px;
   color:grey;
 
@@ -78,3 +73,69 @@ input[type='radio']:checked:before {
   background:#001f3d;
 }
 
+#scrolly {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-around;
+  background-color:white;
+  padding: 1rem;
+}
+
+#scrolly > * {
+  -webkit-box-flex: 1;
+  -ms-flex:  1;
+  flex: 1;
+}
+
+article {
+  position: relative;
+  margin: 0;
+}
+
+figure {
+  position: -webkit-sticky;
+  position: sticky;
+  width: 0%;
+  margin: 0;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  z-index: 0;
+}
+
+figure p {
+  text-align: center;
+  padding: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-size: 8rem;
+  font-weight: 900;
+  color: #fff;
+}
+
+.step {
+  margin: 0 auto 1rem auto;
+  background-color: #3b3b3b;
+  color: #fff;
+}
+
+.step:last-child {
+  margin-bottom: 0;
+}
+
+.step.is-active {
+  background-color: goldenrod;
+  color: grey;
+}
+
+.step p {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.5rem;
+}

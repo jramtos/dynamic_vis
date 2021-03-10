@@ -23,6 +23,64 @@ csv("../data/mental_illness_tab.csv")
         }
     });
 
+var scrolly = select("#scrolly");
+var figure = scrolly.select("figure");
+var article = scrolly.select("article");
+var step = article.selectAll(".step");
+
+// initialize the scrollama
+var scroller = scrollama();
+
+// generic window resize listener event
+function handleResize() {
+    // 1. update height of step elements
+    var stepH = Math.floor(window.innerHeight * 0.75);
+    step.style("height", stepH + "px");
+    var figureHeight = window.innerHeight / 4;
+    var figureMarginTop = (window.innerHeight - figureHeight) / 4;
+    figure
+        .style("height", figureHeight + "px")
+        .style("top", figureMarginTop + "px");
+    // 3. tell scrollama to update new element dimensions
+    scroller.resize();
+}
+
+// scrollama event handlers
+function handleStepEnter(response) {
+    // add color to current step only
+    step.classed("is-active", function (d, i) {
+        return i === response.index;
+    });
+
+    // update graphic based on step
+    figure.select("p").text(response.index + 1);
+}
+
+function setupStickyfill() {
+    selectAll(".sticky").each(function () {
+        Stickyfill.add(this);
+    });
+}
+
+function init() {
+    setupStickyfill();
+    // 1. force a resize on load to ensure proper dimensions are sent to scrollama
+    handleResize();
+    // 2. setup the scroller passing options this will also initialize trigger observations
+    // 3. bind scrollama event handlers (this can be chained like below)
+    scroller
+        .setup({
+            step: "#scrolly article .step",
+            offset: 0.50,
+            debug: false
+        })
+        .onStepEnter(handleStepEnter);
+
+    // setup resize event
+    window.addEventListener("resize", handleResize);
+}
+// kick things off
+init();
 //Fix dictonaries 
 const age_dic = {
     1: '18-24', 2: '25-34', 3: '35-44',
@@ -36,9 +94,9 @@ const mental_illness_dic = {
 }
 
 //Define fixed variables
-const height = 450;
-const width = 650;
-const margin = { left: 80, top: 90, bottom: 90, right: 120 };
+const height = 490;
+const width = 700;
+const margin = { left: 80, top: 30, bottom: 90, right: 120 };
 const plotWidth = width - margin.left - margin.right;
 const plotHeight = height - margin.top - margin.bottom;
 
@@ -122,12 +180,10 @@ function lineplot(data) {
         )
         .attr('transform', `translate(0, ${plotHeight})`);
 
-
-
     //Aesthetics for the graph
     svg.append("text")
         .attr("x", plotWidth - 220)
-        .attr("y", 20 - (margin.top / 2))
+        .attr("y", -3 - (margin.top / 2))
         .attr('id', 'title-first-graph')
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
@@ -170,8 +226,8 @@ function lineplot(data) {
     // text label for the y axis
     svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", margin.top - 130)
-        .attr("x", margin.left - 200)
+        .attr("y", margin.top - 70)
+        .attr("x", margin.left - 250)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .style("font-size", "12px")
@@ -181,7 +237,7 @@ function lineplot(data) {
 
     // text label for the x axis
     svg.append("text")
-        .attr("x", margin.left + 120)
+        .attr("x", margin.left + 160)
         .attr("y", plotHeight + 40)
         .attr("dx", "1em")
         .style("text-anchor", "middle")
