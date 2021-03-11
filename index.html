@@ -13,9 +13,12 @@
     <small> An examination of the 2016 Inmates Survey from the Bureau of Justice Statistics
     </small>
     <br>
+    <div class='author'>
+      <small> By Jesica Ramirez</small>
+    </div>
   </header>
-  <main id="intro" class="main-flex">
-    Mass incarceration /represents a public health and social issue in the U.S, particularly, the high levels of
+  <intro id="intro" class="intro-flex">
+    Mass incarceration represents a public health and social issue in the U.S, particularly, the high levels of
     recidivism are concerning.
     According to the <a href="https://nij.ojp.gov/topics/articles/recidivism-core-criminal-justice-concern"> National
       Institute of Justice</a>, more than 60% of the prisoners released in 2005 were arrested
@@ -27,31 +30,33 @@
     family conditions, emotional difficulties and education, using the data from the BJS 2016 Inmates Survey.
     <br>
     <br>
-    <form id='input-gender'>
-      <b>Select gender population and start scrolling<br>
-      </b>
-      <label><input type="radio" name='gender' value="Male" checked> Male</label>
-      <label><input type="radio" name='gender' value="Female"> Female</label>
-    </form>
-    <br>
+    <div class='instruction'>
+      To follow the analysis, scroll down
+      <div>
+        <img class='arrow' src="arrow.png">
+      </div>
+    </div>
+  </intro>
+  <main>
+    <section id="scrolly">
+      <article>
+        <div class="step" data-step="1">
+          <p>STEP 1</p>
+        </div>
+        <div class="step" data-step="2">
+          <p>STEP 2</p>
+        </div>
+        <div class="step" data-step="3">
+          <p>STEP 3</p>
+        </div>
+      </article>
+      <figure id="app">
+      </figure>
+    </section>
+
   </main>
-  <section id="scrolly">
-    <article>
-      <div class="step" data-step="1">
-        <p>STEP 1</p>
-      </div>
-      <div class="step" data-step="2">
-        <p>STEP 2</p>
-      </div>
-    </article>
-    <figure id="app">
-    </figure>
 
-    <right class='right-flex'>
-
-    </right>
-
-    <script src="bundle.js"></script>
+  <script src="bundle.js"></script>
 </body>
 
 </html>
