@@ -45,7 +45,7 @@ body{
 width: 100px;
 height: 100px;
 transform: rotate(90deg);
-padding-block: 20px;
+padding-top: 10px;
 }
 
 .intro-flex{ 
@@ -58,7 +58,7 @@ padding-block: 20px;
 }
 
 #input-gender{
-  padding-block: 10px;
+  margin-bottom: 20px;
   font-size: 15px;
   top:30px;
   color:grey;
@@ -84,30 +84,46 @@ input[type='radio']:before {
 input[type='radio']:checked:before {
   background:#001f3d;
 }
+#first-part {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 18px;
+  
+}
+
+#times-arrested{
+position: 0 1 0 ;
+margin-left: 0;
+
+}
 
 #scrolly {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  justify-content: space-around;
   background-color:white;
   padding: 1rem;
 }
 
 #scrolly > * {
   -webkit-box-flex: 1;
-  -ms-flex:  1;
+  -ms-flex: 1;
   flex: 1;
 }
-
 article {
   position: relative;
   padding: 0 1rem;
   max-width: 30rem;
 }
+#first-part .article{
+  padding: 0 2rem;
+  max-width: 100rem;
+  margin-left: 10px;
+}
 
-figure {
+figure #app{
   position: -webkit-sticky;
   position: sticky;
   width: 100%;
@@ -133,7 +149,7 @@ figure p {
 }
 
 .step {
-  margin: 0 auto 1rem auto;
+  margin: 0 auto 2rem auto;
   background-color: #3b3b3b;
   color: #fff;
 }
@@ -151,4 +167,23 @@ figure p {
   text-align: center;
   padding: 3rem;
   font-size: 1.5rem;
+}
+
+#page-break{
+  padding: 10px;
+  margin-left: 100px;
+  margin-right: 100px;
+  font-size: 19px;
+}
+
+div.tooltip {	
+  position: absolute;			
+  text-align: center;			
+  width: 110px;					
+  height: 30px;					
+  padding: 2px;				
+  font: 10px sans-serif;
+  border: 0px;		
+  border-radius: 8px;			
+  pointer-events: none;			
 }
