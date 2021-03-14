@@ -6,9 +6,9 @@ import { csv } from 'd3-fetch';
 import { select, selectAll } from 'd3-selection';
 import { nest } from 'd3-collection';
 import { line } from 'd3-shape';
-import { scaleLinear, scaleOrdinal, scalePoint } from 'd3-scale';
+import { scaleLinear, scaleOrdinal, scaleBand, scaleSequential } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
-import { extent, schemeSet2, format } from 'd3';
+import { extent, schemeSet2, format, interpolatePuBuGn } from 'd3';
 import { transition } from 'd3-transition';
 import "intersection-observer";
 import scrollama from "scrollama";
@@ -211,6 +211,7 @@ function first_graph(data) {
         .append('div')
         .attr("class", "tooltip")
         .style("opacity", 0);
+
     //UPDATES HERE
     update(data, 'All')
     //Lineplot
@@ -320,9 +321,9 @@ function scroll_all(data) {
     // generic window resize listener event
     function handleResize() {
         // 1. update height of step elements
-        var stepH = Math.floor(window.innerHeight * 0.75);
+        var stepH = Math.floor(window.innerHeight * 0.80);
         step.style("height", stepH + "px");
-        var figureHeight = window.innerHeight / 2;
+        var figureHeight = window.innerHeight - 100;
         var figureMarginTop = (window.innerHeight - figureHeight) / 2;
         figure
             .style("height", figureHeight + "px")
@@ -339,20 +340,23 @@ function scroll_all(data) {
         });
         // update graphic based on step
 
-
         //Pass step to lineplot
         if (response.index == 0) {
             timeOuts.forEach(function (timeOutFn) {
                 clearTimeout(timeOutFn);
             });
 
-            first_batch(data)
-
+            heat_map(data, 'rest_less')
 
         }
+        else if (response.index == 1) {
+            timeOuts.forEach(function (timeOutFn) {
+                clearTimeout(timeOutFn);
+            });
 
+            heat_map(data, 'hopeless')
 
-
+        }
 
     }
 
@@ -371,8 +375,8 @@ function scroll_all(data) {
         scroller
             .setup({
                 step: "#scrolly article .step",
-                offset: 0.33,
-                debug: true
+                offset: 0.40,
+                debug: false
             })
             .onStepEnter(handleStepEnter)
 
@@ -382,7 +386,72 @@ function scroll_all(data) {
     // kick things off
     init();
 
-    function first_batch(data) {
+    function heat_map(data, conditional) {
+        var margin = { top: 30, right: 30, bottom: 30, left: 30 },
+            width = 450 - margin.left - margin.right,
+            height = 450 - margin.top - margin.bottom;
+
+        select('#app svg').remove()
+        var svg = select("#app")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        const data_of_interest = data.filter(d => d.conditional_var == conditional)
+
+        var group_ages = unique(data_of_interest, 'demo_cat')
+        var frequencies = unique(data_of_interest, 'conditional_cat').sort()
+        // Build X scales and axis:
+        var x = scaleBand()
+            .range([0, width])
+            .domain(group_ages)
+            .padding(0.01);
+
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(axisBottom(x))
+
+        // Build X scales and axis:
+        var y = scaleBand()
+            .range([height, 0])
+            .domain(frequencies)
+            .padding(0.01);
+
+        svg.append("g")
+            .call(axisLeft(y));
+
+        // Build color scale
+        var color_scale = scaleSequential()
+            .interpolator(interpolatePuBuGn)
+            .domain(extent(data_of_interest, d => Number(d.times_arrested)))
+        let delay = 80
+        frequencies.map(val => {
+            timeOuts.push(setTimeout(function () {
+                squares_transition(val);
+            }, delay));
+            delay += 500;
+        })
+        function squares_transition(val) {
+            svg.selectAll()
+                .data(data_of_interest.filter(d => d.conditional_cat == val))
+                .enter()
+                .append("rect")
+                .merge(svg)
+                .attr("x", function (d) { return x(d.demo_cat) })
+                .attr("y", function (d) { return y(d.conditional_cat) })
+                .attr("width", x.bandwidth())
+                .attr("height", y.bandwidth())
+                .style('fill', 'white')
+                .transition()
+                .duration(2000)
+                .style("fill", function (d) {
+                    //console.log(d.times_arrested)
+                    return color_scale(Number(d.times_arrested))
+                })
+        }
 
     }
 }

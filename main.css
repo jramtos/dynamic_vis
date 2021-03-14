@@ -123,7 +123,7 @@ article {
   margin-left: 10px;
 }
 
-figure #app{
+figure{
   position: -webkit-sticky;
   position: sticky;
   width: 100%;
@@ -186,4 +186,8 @@ div.tooltip {
   border: 0px;		
   border-radius: 8px;			
   pointer-events: none;			
+}
+
+#outro{
+  margin-top: 50px;
 }
