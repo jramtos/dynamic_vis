@@ -8,7 +8,7 @@ import { nest } from 'd3-collection';
 import { line } from 'd3-shape';
 import { scaleLinear, scaleOrdinal, scaleBand, scaleSequential } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
-import { extent, schemeSet2, format, interpolatePuBuGn, range } from 'd3';
+import { extent, schemeSet2, format, interpolatePuBuGn, interpolatePuRd, range } from 'd3';
 import { transition } from 'd3-transition';
 import "intersection-observer";
 import scrollama from "scrollama";
@@ -74,6 +74,15 @@ const emotional_dic = {
     4: 'Most of the time',
     5: 'All the time'
 }
+
+const family_conditions = {
+    1: 'Regular Average',
+    2: 'Relatives in Prison',
+    3: 'Foster Care',
+    4: 'Homeless before arrest',
+    5: 'Homeless before 18'
+}
+
 
 const mental_ill = [0, 1, 2]
 
@@ -331,7 +340,7 @@ function scroll_all(data) {
     // generic window resize listener event
     function handleResize() {
         // 1. update height of step elements
-        var stepH = Math.floor(window.innerHeight * 0.80);
+        var stepH = Math.floor(window.innerHeight * 0.70);
         step.style("height", stepH + "px");
         var figureHeight = window.innerHeight - 100;
         var figureMarginTop = (window.innerHeight - figureHeight) / 2;
@@ -356,7 +365,7 @@ function scroll_all(data) {
                 clearTimeout(timeOutFn);
             });
 
-            heat_map(data, 'rest_less')
+            heat_map(data, 'rest_less', 'age')
 
         }
         else if (response.index == 1) {
@@ -364,7 +373,7 @@ function scroll_all(data) {
                 clearTimeout(timeOutFn);
             });
 
-            heat_map(data, 'hopeless')
+            heat_map(data, 'rest_less', 'race')
 
         }
         else if (response.index == 2) {
@@ -372,10 +381,16 @@ function scroll_all(data) {
                 clearTimeout(timeOutFn);
             });
 
-            heat_map(data, 'nervous')
+            heat_map_2(data, 'family_conditions', 'age')
 
         }
+        else if (response.index == 3) {
+            timeOuts.forEach(function (timeOutFn) {
+                clearTimeout(timeOutFn);
+            });
 
+            heat_map_2(data, 'family_conditions', 'race')
+        }
     }
 
     function setupStickyfill() {
@@ -393,8 +408,8 @@ function scroll_all(data) {
         scroller
             .setup({
                 step: "#scrolly article .step",
-                offset: 0.40,
-                debug: false
+                offset: 0.4,
+                debug: true
             })
             .onStepEnter(handleStepEnter)
 
@@ -404,7 +419,7 @@ function scroll_all(data) {
     // kick things off
     init();
 
-    function heat_map(data, conditional) {
+    function heat_map(data, conditional, group_demo) {
 
         //Define fixed variables
         const height = 600;
@@ -427,24 +442,24 @@ function scroll_all(data) {
                 "translate(" + margin.left + "," + margin.top + ")");
 
         //Get data of interest
-        const data_of_interest = data.filter(d => d.conditional_var == conditional)
+        const data_of_interest = data.filter(d => (d.conditional_var == conditional)
+            & (d.demo_var == group_demo))
 
         //Define Fixed Groups for Heatmap
-        var group_ages = unique(data_of_interest, 'demo_cat')
+        var group_ages_races = unique(data_of_interest, 'demo_cat').sort()
         var frequencies = unique(data_of_interest, 'conditional_cat').sort()
 
         // Build X scales and axis:
         var x = scaleBand()
             .range([0, plotWidth])
-            .domain(group_ages)
+            .domain(group_ages_races)
             .padding(0.01);
-
         svg.append("g")
             .attr("transform", "translate(0," + plotHeight + ")")
             .call(
                 axisBottom(x)
-                    .tickValues(group_ages)
-                    .tickFormat(row => demo_dic['age'][Number(row)])
+                    .tickValues(group_ages_races)
+                    .tickFormat(row => demo_dic[group_demo][Number(row)])
             )
         //Title and Axis Labels
 
@@ -461,7 +476,7 @@ function scroll_all(data) {
             .style("font-size", "17px")
             .style('font-weight', 'bold')
             .style('fill', 'black')
-            .text(`Average Arrests`)
+            .text(`Average Arrests Across Emotional Difficulties`)
             .attr('class', 'title')
 
         svg.append("text")
@@ -485,6 +500,7 @@ function scroll_all(data) {
             .style('fill', 'grey')
             .text(`Frequency of ${title_dic[conditional]}`);
 
+        var subtitle_dic = { 'age': 'Age', 'race': 'Race' }
         svg.append("text")
             .attr('class', 'x-label')
             .attr("x", plotWidth / 2)
@@ -494,7 +510,7 @@ function scroll_all(data) {
             .style("font-size", "15px")
             .style('font-weight', 'bold')
             .style('fill', 'grey')
-            .text('Age Group');
+            .text(`${subtitle_dic[group_demo]} Group`);
 
         //Custom subtitle
         svg.append("text")
@@ -505,7 +521,7 @@ function scroll_all(data) {
             .style("font-size", "16px")
             .style('font-weight', 'bold')
             .style('fill', 'grey')
-            .text(`By Frequency of ${title_dic[conditional]} and Age`)
+            .text(`By ${subtitle_dic[group_demo]} Groups`)
             .attr('class', 'subtitle')
 
 
@@ -548,7 +564,6 @@ function scroll_all(data) {
             tooltip.transition()
                 .duration(200)
                 .style("opacity", 1)
-            console.log([event.pageX, event.pageY])
             tooltip.html(
                 "<br/>" + '<b>' + 'Frequency: ' + '</b>' + emotional_dic[Number(d.conditional_cat)] +
                 "<br/>" + '<b>' + "Average Arrests: " + '</b>' + formatDecimal(d.times_arrested))
@@ -604,7 +619,6 @@ function scroll_all(data) {
         for (var i = 0; i < numStops; i++) {
             countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
         }//for i
-        console.log(countPoint)
         //Create the gradient
         svg.append("defs")
             .append("linearGradient")
@@ -658,6 +672,274 @@ function scroll_all(data) {
         //Define x-axis
         var xAxisLegend = axisBottom(xScaleLegend)
             .ticks(4)
+            .tickSizeOuter(0)
+            .tickSizeInner(0)
+
+
+        //Set up X axis
+        legendsvg.append("g")
+            .attr("class", "axis")
+            .attr('stroke-width', 0)
+            .attr('font-size', '10px')
+            .attr("transform", "translate(0," + (20) + ")")
+            .call(xAxisLegend)
+
+
+
+
+
+    }
+
+    function heat_map_2(data, conditional, group_demo) {
+
+        //Define fixed variables
+        const height = 600;
+        const width = 600;
+        const margin = { left: 140, top: 50, bottom: 170, right: 50 };
+        const plotWidth = width - margin.left - margin.right;
+        const plotHeight = height - margin.top - margin.bottom;
+
+
+        select('#app svg').remove()
+        select('#app div').remove()
+
+        //Initialize svg  
+        var svg = select("#app")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        //Get data of interest
+        const data_of_interest = data.filter(d => (d.conditional_var == conditional)
+            & (d.demo_var == group_demo))
+
+        //Define Fixed Groups for Heatmap
+        var group_ages_races = unique(data_of_interest, 'demo_cat').sort()
+        var family_conditions_groups = unique(data_of_interest, 'conditional_cat').sort()
+
+        // Build X scales and axis:
+        var x = scaleBand()
+            .range([0, plotWidth])
+            .domain(group_ages_races)
+            .padding(0.01);
+
+        svg.append("g")
+            .attr("transform", "translate(0," + plotHeight + ")")
+            .call(
+                axisBottom(x)
+                    .tickValues(group_ages_races)
+                    .tickFormat(row => demo_dic[group_demo][Number(row)])
+            )
+        //Title and Axis Labels
+
+        //Other Fixed Aesthetics 
+        svg.append("text")
+            .attr("x", plotWidth - 200)
+            .attr("y", -8 - (margin.top / 2))
+            .attr('id', 'title-first-graph')
+            .attr("text-anchor", "middle")
+            .style("font-size", "17px")
+            .style('font-weight', 'bold')
+            .style('fill', 'black')
+            .text(`Average Arrests Across Family Conditions`)
+            .attr('class', 'title')
+
+        svg.append("text")
+            .attr("x", plotWidth / 2 - 100)
+            .attr("y", plotHeight + 120)
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .text("Source: BJS 2016 Inmates Survey")
+            .attr('id', 'legend');
+
+        //Y and X labels
+        svg.append("text")
+            .attr('class', 'y-label')
+            .attr("transform", "rotate(-90)")
+            .attr("y", -2 - margin.left)
+            .attr("x", -plotHeight / 2)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style("font-size", "15px")
+            .style('font-weight', 'bold')
+            .style('fill', 'grey')
+            .text(`Family Conditions`);
+
+        var subtitle_dic = { 'age': 'Age', 'race': 'Race' }
+        svg.append("text")
+            .attr('class', 'x-label')
+            .attr("x", plotWidth / 2)
+            .attr("y", plotHeight + 40)
+            .attr("dx", "1em")
+            .style("text-anchor", "middle")
+            .style("font-size", "15px")
+            .style('font-weight', 'bold')
+            .style('fill', 'grey')
+            .text(`${subtitle_dic[group_demo]} Group`);
+
+        //Custom subtitle
+        svg.append("text")
+            .attr("x", plotWidth - 200)
+            .attr("y", 15 - (margin.top / 2))
+            .attr('id', 'subtitle-title-first-graph')
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style('font-weight', 'bold')
+            .style('fill', 'grey')
+            .text(`By ${subtitle_dic[group_demo]} Groups`)
+            .attr('class', 'subtitle')
+
+        // Build Y scales and axis:
+        var y = scaleBand()
+            .range([plotHeight, 0])
+            .domain(family_conditions_groups)
+            .padding(0.01);
+
+        svg.append("g")
+            .attr('font-size', '15px')
+            .call(
+                axisLeft(y)
+                    .tickValues(family_conditions_groups)
+                    .tickFormat(row => family_conditions[Number(row)])
+
+            );
+
+
+        // Build color scale
+        var color_scale = scaleSequential()
+            .interpolator(interpolatePuRd)
+            .domain(extent(data_of_interest, d => Number(d.times_arrested)))
+
+        //Transiton for every row in the heatmap
+        //Tooltip Section
+        // create a tooltip
+        var tooltip = select("#app")
+            .append("div")
+            .style("position", "absolute")
+            .attr('id', 'squares_tooltip')
+            .style("opacity", 0)
+            .attr("class", "squares_tooltip")
+
+        var formatDecimal = format(",.2f");
+        // Three function that change the tooltip when user hover / move / leave a cell
+        var mouseover = (event, d) => {
+            tooltip.style("opacity", 1)
+        }
+        var mousemove = (event, d) => {
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", 1)
+            tooltip.html(
+                "<br/>" + '<b>' + 'Condition: ' + '</b>' + family_conditions[Number(d.conditional_cat)] +
+                "<br/>" + '<b>' + "Average Arrests: " + '</b>' + formatDecimal(d.times_arrested))
+                .style("left", (event.pageX / 3) + "px")
+                .style("top", (event.pageY / 12) + "px")
+                .style('background', 'white')
+        }
+        var mouseleave = (d) => {
+            tooltip.style("opacity", 0)
+        }
+
+        let delay = 80
+        family_conditions_groups.map(val => {
+            timeOuts.push(setTimeout(function () {
+                squares_transition(val);
+            }, delay));
+            delay += 500;
+        })
+        function squares_transition(val) {
+            var squares = svg.selectAll()
+                .data(data_of_interest.filter(d => d.conditional_cat == val))
+                .enter()
+                .append("rect")
+                .attr('id', 'squares')
+                .merge(svg)
+                .attr("x", function (d) { return x(d.demo_cat) })
+                .attr("y", function (d) { return y(d.conditional_cat) })
+                .attr("width", x.bandwidth())
+                .attr("height", y.bandwidth())
+                .style('fill', 'white')
+            squares.transition()
+                .duration(2000)
+                .style("fill", function (d) {
+                    return color_scale(Number(d.times_arrested))
+                })
+            squares.on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave)
+        }
+
+        ////////////////////////////////////////////////////////////
+        ////////////////////////// Draw the legend /////////////////
+
+        //Calculate the variables for the temp gradient
+        var countScale = scaleLinear()
+            .domain(extent(data_of_interest, d => Number(d.times_arrested)))
+            .range([0, width])
+        var numStops = 10;
+        var countRange = countScale.domain()
+        countRange[2] = countRange[1] - countRange[0];
+
+        var countPoint = [];
+        for (var i = 0; i < numStops; i++) {
+            countPoint.push(i * countRange[2] / (numStops - 1) + countRange[0]);
+        }//for i
+        //Create the gradient
+        svg.append("defs")
+            .append("linearGradient")
+            .attr("id", "legend-recidivism")
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "0%")
+            .selectAll("stop")
+            .data(range(numStops))
+            .enter()
+            .append("stop")
+            .attr("offset", (d, idx) => {
+                return countScale(countPoint[idx]) / plotWidth;
+            })
+            .attr("stop-color", function (d, i) {
+                return color_scale(countPoint[i]);
+            });
+
+        var legendWidth = Math.min(width * 0.8, 400);
+        //Color Legend container
+        var legendsvg = svg.append("g")
+            .attr("class", "legendWrapper")
+            .attr("transform", `translate(${plotWidth / 2 + 100}, ${plotHeight + 65})`);
+
+        //Draw the Rectangle
+        legendsvg.append("rect")
+            .attr("class", "legendRect")
+            .attr("x", -legendWidth / 2)
+            .attr("y", 10)
+            //.attr("rx", hexRadius*1.25/2)
+            .attr("width", legendWidth / 2)
+            .attr("height", 10)
+            .style("fill", "url(#legend-recidivism)");
+
+        //Append title
+        legendsvg.append("text")
+            .attr("class", "legendTitle")
+            .attr("y", 0)
+            .attr("x", -legendWidth / 2 + 120)
+            .style("text-anchor", "middle")
+            .style('font-size', '12px')
+            .text("Average Number of Arrests");
+
+        //Set scale for x-axis
+        var legendDomain = extent(data_of_interest, d => Number(d.times_arrested))
+        var xScaleLegend = scaleLinear()
+            .range([-legendWidth / 2, 0])
+            .domain([legendDomain[0] - .3, legendDomain[1]])
+
+        //Define x-axis
+        var xAxisLegend = axisBottom(xScaleLegend)
+            .ticks(5)
             .tickSizeOuter(0)
             .tickSizeInner(0)
 

@@ -144,8 +144,20 @@ figure p {
 
 .step {
   margin: 0 auto 2rem auto;
-  background-color: #3b3b3b;
-  color: #fff;
+  background-color: white;
+}
+h3{
+  margin-top: 0px;
+}
+.step h3{
+  margin-top: 0px;
+  font-size: 20px;
+}
+.step text{
+  margin-top: 0px;
+  font-size: 15px;
+  text-justify: auto;
+  line-height: 25px;
 }
 
 .step:last-child {
@@ -153,8 +165,8 @@ figure p {
 }
 
 .step.is-active {
-  background-color: goldenrod;
-  color: grey;
+  background-color: white;
+
 }
 
 .step p {
@@ -169,7 +181,7 @@ figure p {
   
   }
 #page-break{
-  padding: 10px;
+  padding: 20px;
   margin-left: 100px;
   margin-right: 100px;
   font-size: 19px;
@@ -188,7 +200,7 @@ div.tooltip {
 }
 
 #outro{
-  margin-top: 50px;
+  margin-top: 0px;
 }
 
 div.squares_tooltip {
@@ -208,4 +220,11 @@ div.squares_tooltip {
   font-size: 12px;
   font-weight: bold;
 
+}
+
+h4{
+  margin-top: 40px;
+  margin-left: 40px;
+  font-size: 20px;
+  text-align: left;
 }
