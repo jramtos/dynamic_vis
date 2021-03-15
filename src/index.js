@@ -89,7 +89,7 @@ const mental_ill = [0, 1, 2]
 
 // INITIALIZE HERE//
 
-csv("../data/survey_aggregates.csv")
+csv("./data/survey_aggregates.csv")
     .then(dataset => {
         first_graph(dataset)
         scroll_all(dataset)
