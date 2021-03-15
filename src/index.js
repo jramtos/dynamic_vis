@@ -342,7 +342,7 @@ function scroll_all(data) {
         // 1. update height of step elements
         var stepH = Math.floor(window.innerHeight * 0.70);
         step.style("height", stepH + "px");
-        var figureHeight = window.innerHeight - 100;
+        var figureHeight = window.innerHeight - 90;
         var figureMarginTop = (window.innerHeight - figureHeight) / 2;
         figure
             .style("height", figureHeight + "px")
@@ -408,7 +408,7 @@ function scroll_all(data) {
         scroller
             .setup({
                 step: "#scrolly article .step",
-                offset: 0.4,
+                offset: 0.33,
                 debug: false
             })
             .onStepEnter(handleStepEnter)
@@ -500,7 +500,7 @@ function scroll_all(data) {
             .style('fill', 'grey')
             .text(`Frequency of ${title_dic[conditional]}`);
 
-        var subtitle_dic = { 'age': 'Age', 'race': 'Race' }
+        var subtitle_dic = { 'age': 'Age', 'race': 'Race/Ethnicity' }
         svg.append("text")
             .attr('class', 'x-label')
             .attr("x", plotWidth / 2)
@@ -768,7 +768,7 @@ function scroll_all(data) {
             .style('fill', 'grey')
             .text(`Family Conditions`);
 
-        var subtitle_dic = { 'age': 'Age', 'race': 'Race' }
+        var subtitle_dic = { 'age': 'Age', 'race': 'Race/Ethnicity' }
         svg.append("text")
             .attr('class', 'x-label')
             .attr("x", plotWidth / 2)
