@@ -89,7 +89,7 @@ const mental_ill = [0, 1, 2]
 
 // INITIALIZE HERE//
 
-csv("./data/survey_aggregates.csv")
+csv("data/survey_aggregates.csv")
     .then(dataset => {
         first_graph(dataset)
         scroll_all(dataset)
@@ -409,7 +409,7 @@ function scroll_all(data) {
             .setup({
                 step: "#scrolly article .step",
                 offset: 0.4,
-                debug: true
+                debug: false
             })
             .onStepEnter(handleStepEnter)
 
@@ -843,8 +843,13 @@ function scroll_all(data) {
             tooltip.style("opacity", 0)
         }
 
+        let shuffled = family_conditions_groups
+            .map((a) => ({ sort: Math.random(), value: a }))
+            .sort((a, b) => b.sort - a.sort)
+            .map((a) => a.value)
+
         let delay = 80
-        family_conditions_groups.map(val => {
+        shuffled.map(val => {
             timeOuts.push(setTimeout(function () {
                 squares_transition(val);
             }, delay));
