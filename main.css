@@ -31,7 +31,9 @@ body{
 
 .author{
   padding-top: 40px;
-  font-size: 22px;
+  font-family: -apple-system, 'Helvetica Neue';
+  font-size: 20px;
+  font-weight: 500;
   color: #ebecf0;
 }
 
@@ -49,7 +51,7 @@ padding-top: 10px;
 }
 
 .intro-flex{ 
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 400;
   margin-left: 200px;
   margin-right: 200px;
@@ -198,8 +200,8 @@ div.tooltip {
 div.squares_tooltip {
   position: absolute;			
   text-align: center;	
-  width: 200px;					
-  height: 50px;		
+  width: 160px;					
+  height: 70px;		
   font: 10px sans-serif;
   border: 0px;		
   border-radius: 8px;			
@@ -215,9 +217,34 @@ div.squares_tooltip {
 }
 
 h4{
-  margin-top: 40px;
+  margin-top: 30px;
   margin-left: 40px;
   font-size: 20px;
   text-align: left;
 }
 
+ul{
+  text-align: left;
+}
+
+li{
+  padding: 10px;
+  line-height: 25px;
+}
+
+a{
+  color: black;
+}
+
+final-thanks{
+  line-height: 25px;
+  text-align: left;
+}
+
+footer{
+  text-align: center;
+  padding: 3px;
+  background-color: #ebecf0;
+margin-bottom: 50px;
+  display: block;
+}

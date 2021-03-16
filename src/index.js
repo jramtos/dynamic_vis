@@ -12,7 +12,6 @@ import { extent, schemeSet2, format, interpolatePuBuGn, interpolatePuRd, range }
 import { transition } from 'd3-transition';
 import "intersection-observer";
 import scrollama from "scrollama";
-import { legendColor } from 'd3-svg-legend'
 
 //Helper functions
 function unique(data, key) {
@@ -340,7 +339,7 @@ function scroll_all(data) {
     // generic window resize listener event
     function handleResize() {
         // 1. update height of step elements
-        var stepH = Math.floor(window.innerHeight * 0.70);
+        var stepH = Math.floor(window.innerHeight * 0.75);
         step.style("height", stepH + "px");
         var figureHeight = window.innerHeight - 90;
         var figureMarginTop = (window.innerHeight - figureHeight) / 2;
@@ -561,15 +560,18 @@ function scroll_all(data) {
             tooltip.style("opacity", 1)
         }
         var mousemove = (event, d) => {
+            console.log(d)
             tooltip.transition()
                 .duration(200)
                 .style("opacity", 1)
-            tooltip.html(
-                "<br/>" + '<b>' + 'Frequency: ' + '</b>' + emotional_dic[Number(d.conditional_cat)] +
-                "<br/>" + '<b>' + "Average Arrests: " + '</b>' + formatDecimal(d.times_arrested))
-                .style("left", (event.pageX / 3) + "px")
-                .style("top", (event.pageY / 12) + "px")
-                .style('background', 'white')
+            tooltip.html("<br>" +
+                "<b>" + `${subtitle_dic[group_demo]} Group: ` + '</b>' + demo_dic[group_demo][Number(d.demo_cat)] +
+                "<br>" + '<b>' + 'Frequency: ' + '</b>' + emotional_dic[Number(d.conditional_cat)] +
+                "<br>" + '<b>' + "Average Arrests: " + '</b>' + formatDecimal(d.times_arrested) +
+                "<br>")
+                .style("left", (event.offsetX) + "px")
+                .style("top", Math.min(event.offsetY, event.clientY) + "px")
+                .style('background', 'rgb(255,255,255, 0.5)')
         }
         var mouseleave = (d) => {
             tooltip.style("opacity", 0)
@@ -832,12 +834,13 @@ function scroll_all(data) {
             tooltip.transition()
                 .duration(200)
                 .style("opacity", 1)
-            tooltip.html(
+            tooltip.html("<br>" +
+                "<b>" + `${subtitle_dic[group_demo]} Group: ` + '</b>' + demo_dic[group_demo][Number(d.demo_cat)] +
                 "<br/>" + '<b>' + 'Condition: ' + '</b>' + family_conditions[Number(d.conditional_cat)] +
                 "<br/>" + '<b>' + "Average Arrests: " + '</b>' + formatDecimal(d.times_arrested))
-                .style("left", (event.pageX / 3) + "px")
-                .style("top", (event.pageY / 12) + "px")
-                .style('background', 'white')
+                .style("left", (event.offsetX + 100) + "px")
+                .style("top", (event.clientY) + "px")
+                .style('background', 'rgb(255,255,255, 0.5)')
         }
         var mouseleave = (d) => {
             tooltip.style("opacity", 0)
