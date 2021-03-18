@@ -13,7 +13,7 @@ body{
   font-size: 15px;
   color: black;
   height: 100vh;
-  text-align: center;
+  text-align: justify;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -27,10 +27,11 @@ body{
   padding-bottom: 2rem;
   font-size: 25px;
   font-weight: 700;
+  text-align: center;
 }
 
 .author{
-  padding-top: 40px;
+  padding-top: 30px;
   font-family: -apple-system, 'Helvetica Neue';
   font-size: 20px;
   font-weight: 500;
@@ -42,7 +43,9 @@ body{
   font-size: 20px;
   font-family: 'Lucida Sans Unicode', sans-serif;
   color: #8a8a8a;
+  text-align: center;
 }
+
 .arrow {
 width: 100px;
 height: 100px;
@@ -88,9 +91,11 @@ input[type='radio']:checked:before {
 #first-part {
   display: flex;
   flex-direction: row;
-  justify-content:space-around;
   font-size: 18px;
   
+}
+#attention-text{
+  text-align: center;
 }
 
 #scrolly {
@@ -109,8 +114,8 @@ input[type='radio']:checked:before {
 }
 article {
   position: relative;
-  padding: 0 1rem;
-  max-width: 30rem;
+  padding: 0 2.5rem;
+  max-width: 40rem;
 }
 #first-part .article{
   padding: 0 1rem;

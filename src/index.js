@@ -8,7 +8,7 @@ import { nest } from 'd3-collection';
 import { line } from 'd3-shape';
 import { scaleLinear, scaleOrdinal, scaleBand, scaleSequential } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
-import { extent, schemeSet2, format, interpolatePuBuGn, interpolatePuRd, range } from 'd3';
+import { extent, schemePaired, schemeSet2, format, interpolatePuBuGn, interpolatePuRd, range } from 'd3';
 import { transition } from 'd3-transition';
 import "intersection-observer";
 import scrollama from "scrollama";
@@ -114,7 +114,7 @@ function first_graph(data) {
             d => Number(d.demo_cat)))
         .range([0, plotWidth])
     var mental_ill_colors = scaleOrdinal()
-        .range(schemeSet2.slice(0, 3))
+        .range([schemeSet2[7], schemePaired[6], schemePaired[7]])
         .domain(mental_ill);
 
     //Line Generator Function
@@ -283,17 +283,18 @@ function first_graph(data) {
         dots.on("mouseover", function (event, d) {
             div.transition()
                 .duration(200)
-                .style("opacity", .9);
+                .style("opacity", .8);
 
-            div.html("Group: " + demo_dic['age'][d.demo_cat] +
-                "<br/>" + "Average Arrests: " + formatDecimal(d.times_arrested))
-                .style("left", (event.pageX) + "px")
-                .style("top", (event.pageY - 10) + "px")
+            div.html("<b>" + "Group: " + "</b>" + demo_dic['age'][d.demo_cat] +
+                "<br/>" + "<b>" + "Average Arrests: " + "</b>" + formatDecimal(d.times_arrested))
+                .style("left", (event.pageX - 10) + "px")
+                .style("top", (event.pageY - 30) + "px")
                 .style('background', mental_ill_colors(d.conditional_cat));
         })
             .on("mouseout", function (d) {
                 div.transition()
                     .duration(500)
+                    .delay(100)
                     .style("opacity", 0);
             });
 
@@ -423,7 +424,7 @@ function scroll_all(data) {
         //Define fixed variables
         const height = 600;
         const width = 600;
-        const margin = { left: 120, top: 50, bottom: 170, right: 70 };
+        const margin = { left: 140, top: 50, bottom: 170, right: 20 };
         const plotWidth = width - margin.left - margin.right;
         const plotHeight = height - margin.top - margin.bottom;
 
@@ -490,7 +491,7 @@ function scroll_all(data) {
         svg.append("text")
             .attr('class', 'y-label')
             .attr("transform", "rotate(-90)")
-            .attr("y", -1 - margin.left)
+            .attr("y", 27 - margin.left)
             .attr("x", -plotHeight / 2)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
@@ -569,8 +570,8 @@ function scroll_all(data) {
                 "<br>" + '<b>' + 'Frequency: ' + '</b>' + emotional_dic[Number(d.conditional_cat)] +
                 "<br>" + '<b>' + "Average Arrests: " + '</b>' + formatDecimal(d.times_arrested) +
                 "<br>")
-                .style("left", (event.offsetX) + "px")
-                .style("top", Math.min(event.offsetY, event.clientY) + "px")
+                .style("left", (event.offsetX - 20) + "px")
+                .style("top", Math.min(event.offsetY - 10, event.clientY - 10) + "px")
                 .style('background', 'rgb(255,255,255, 0.5)')
         }
         var mouseleave = (d) => {
@@ -838,8 +839,8 @@ function scroll_all(data) {
                 "<b>" + `${subtitle_dic[group_demo]} Group: ` + '</b>' + demo_dic[group_demo][Number(d.demo_cat)] +
                 "<br/>" + '<b>' + 'Condition: ' + '</b>' + family_conditions[Number(d.conditional_cat)] +
                 "<br/>" + '<b>' + "Average Arrests: " + '</b>' + formatDecimal(d.times_arrested))
-                .style("left", (event.offsetX + 100) + "px")
-                .style("top", (event.clientY) + "px")
+                .style("left", (event.offsetX + 10) + "px")
+                .style("top", (event.clientY - 15) + "px")
                 .style('background', 'rgb(255,255,255, 0.5)')
         }
         var mouseleave = (d) => {
