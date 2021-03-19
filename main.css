@@ -23,7 +23,7 @@ body{
   background-image: url('background_img.png');
   background-attachment: fixed;
   background-size: contain;
-  padding-top: 5rem;
+  padding-top: 2rem;
   padding-bottom: 2rem;
   font-size: 25px;
   font-weight: 700;
@@ -51,6 +51,7 @@ width: 100px;
 height: 100px;
 transform: rotate(90deg);
 padding-top: 10px;
+padding-bottom: 50px;
 }
 
 .intro-flex{ 
@@ -58,7 +59,7 @@ padding-top: 10px;
   font-weight: 400;
   margin-left: 200px;
   margin-right: 200px;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 #input-gender{
@@ -151,6 +152,7 @@ figure p {
 .step {
   margin: 0 auto 2rem auto;
   background-color: white;
+  color: #ebecf0;
 }
 h3{
   margin-top: 0px;
@@ -159,13 +161,19 @@ h3{
 .step h3{
   margin-top: 0px;
   font-size: 20px;
+  color: #ebecf0;
 }
 .step:last-child {
   margin-bottom: 0;
 }
 
+.step.is-active h3{
+  color: black;
+}
+
 .step.is-active {
   background-color: white;
+  color: black;
 
 }
 .step text{
@@ -200,6 +208,11 @@ div.tooltip {
 
 #outro{
   margin-top: 0px;
+  margin-left: 150px;
+  margin-right: 150px;
+  margin-bottom: 30px;
+  line-height: 25px;
+  font-size: 16px;
 }
 
 div.squares_tooltip {

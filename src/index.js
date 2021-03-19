@@ -687,10 +687,6 @@ function scroll_all(data) {
             .attr("transform", "translate(0," + (20) + ")")
             .call(xAxisLegend)
 
-
-
-
-
     }
 
     function heat_map_2(data, conditional, group_demo) {
@@ -960,10 +956,5 @@ function scroll_all(data) {
             .attr('font-size', '10px')
             .attr("transform", "translate(0," + (20) + ")")
             .call(xAxisLegend)
-
-
-
-
-
     }
 }
